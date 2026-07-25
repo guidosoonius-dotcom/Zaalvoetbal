@@ -41,8 +41,8 @@ const playerStats: PlayerSeasonStat[] = [
 ];
 
 export const season1: Season = {
-  id: "seizoen-1",
-  label: "Seizoen 1",
+  id: "seizoen-2025-2026",
+  label: "2025-2026",
   matches: buildMatches("s1", tuples),
   playerStats,
 };

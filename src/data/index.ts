@@ -6,7 +6,8 @@ import { Match, Season } from "./types";
 
 export * from "./types";
 
-export const seasons: Season[] = [season1, season2, season3, season4];
+// Chronological order: 2022-2023, 2023-2024, 2024-2025, 2025-2026
+export const seasons: Season[] = [season2, season4, season3, season1];
 
 export function getSeasons(): Season[] {
   return seasons;

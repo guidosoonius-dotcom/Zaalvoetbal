@@ -13,7 +13,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Data
 
-De wedstrijddata staat in `src/data/season1.ts` t/m `season4.ts` (seizoen 1–4, chronologisch). Elk bestand bevat:
+De wedstrijddata staat in `src/data/season1.ts` t/m `season4.ts` (bestandsnamen komen niet overeen met de seizoenjaren — de volgorde wordt bepaald door de `seasons` array in `src/data/index.ts`, die chronologisch is: 2022-2023, 2023-2024, 2024-2025, 2025-2026). Elk bestand bevat:
 
 - `matches`: per wedstrijd datum, tegenstander, thuis/uit, uitslag en type (competitie/beker/oefenwedstrijd, afgeleid uit de notitie).
 - `playerStats`: aanwezigheid en doelpunten per speler, overgenomen uit de jaartotalen van de originele team-spreadsheets.

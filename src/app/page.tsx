@@ -24,7 +24,7 @@ const seasons = getSeasons();
 const allMatches = getAllMatches();
 
 export default function Home() {
-  const [seasonId, setSeasonId] = useState<string | "all">("all");
+  const [seasonId, setSeasonId] = useState<string | "all">(seasons[seasons.length - 1].id);
   const [matchType, setMatchType] = useState<MatchType | "all">("all");
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
 
@@ -121,7 +121,7 @@ export default function Home() {
           </Card>
         )}
 
-        <Card icon={<Activity className="h-4 w-4" />} title="Vorm" description="Cumulatieve punten (winst=3, gelijk=1) door de tijd">
+        <Card icon={<Activity className="h-4 w-4" />} title="Wedstrijdvorm" description="Doelsaldo per wedstrijd, chronologisch">
           <HeroFormChart matches={filteredMatches} />
         </Card>
 

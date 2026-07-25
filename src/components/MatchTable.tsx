@@ -21,7 +21,7 @@ export function MatchTable({ matches }: { matches: MatchWithSeason[] }) {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Zoek op tegenstander..."
-        className="w-full sm:w-64 rounded-lg border border-border bg-surface-raised px-3 py-1.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-[var(--series-1)]"
+        className="w-full sm:w-64 rounded-full bg-white/40 dark:bg-white/10 border border-border px-4 py-1.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-[var(--sunset-purple)]"
       />
       <div className="overflow-x-auto -mx-1">
         <table className="w-full text-sm border-collapse min-w-[640px]">

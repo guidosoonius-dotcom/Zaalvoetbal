@@ -29,7 +29,7 @@ export function Filters({
           id="season-select"
           value={seasonId}
           onChange={(e) => onSeasonChange(e.target.value)}
-          className="rounded-lg border border-border bg-surface-raised px-3 py-1.5 text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:ring-[var(--series-1)]"
+          className="glass rounded-full px-4 py-1.5 text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:ring-[var(--sunset-purple)]"
         >
           <option value="all">Alle seizoenen</option>
           {seasons.map((s) => (
@@ -42,16 +42,16 @@ export function Filters({
 
       <div className="flex items-center gap-2 flex-wrap">
         <span className="text-xs font-medium text-text-muted uppercase tracking-wide">Wedstrijdtype</span>
-        <div className="inline-flex rounded-lg border border-border bg-surface-raised p-0.5">
+        <div className="glass inline-flex rounded-full p-1">
           {MATCH_TYPES.map((t) => (
             <button
               key={t}
               type="button"
               onClick={() => onMatchTypeChange(t)}
               className={cn(
-                "px-3 py-1 rounded-md text-xs font-semibold transition-colors",
+                "px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors",
                 matchType === t
-                  ? "bg-[var(--series-1)] text-white"
+                  ? "bg-gradient-to-r from-[var(--sunset-pink)] to-[var(--sunset-orange)] text-white shadow-sm"
                   : "text-text-secondary hover:text-text-primary",
               )}
             >

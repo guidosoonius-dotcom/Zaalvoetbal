@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Trophy, Users, TrendingUp, Goal, Swords, ListChecks, Activity } from "lucide-react";
 import { getAllMatches, getSeasons, MatchType } from "@/data";
 import {
   computeHeadToHead,
@@ -14,6 +15,7 @@ import { StatTile } from "@/components/StatTile";
 import { Card } from "@/components/Card";
 import { BarList } from "@/components/BarList";
 import { GoalsTrendChart, ResultTrendChart } from "@/components/SeasonTrendChart";
+import { HeroFormChart } from "@/components/HeroFormChart";
 import { HeadToHeadTable } from "@/components/HeadToHeadTable";
 import { MatchTable } from "@/components/MatchTable";
 import { PlayerDetail } from "@/components/PlayerDetail";
@@ -68,12 +70,23 @@ export default function Home() {
 
   return (
     <div className="min-h-full flex flex-col">
-      <header className="sticky top-0 z-10 border-b border-border bg-page/95 backdrop-blur supports-[backdrop-filter]:bg-page/80">
+      <header
+        className="sticky top-0 z-10 border-b"
+        style={{
+          background: "var(--glass-bg)",
+          backdropFilter: "blur(var(--glass-blur)) saturate(160%)",
+          WebkitBackdropFilter: "blur(var(--glass-blur)) saturate(160%)",
+          borderColor: "var(--glass-border)",
+        }}
+      >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col gap-4">
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div>
-              <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-text-primary">
-                Alphia <span className="text-[var(--series-1)]">Dashboard</span>
+              <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
+                Alphia{" "}
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[var(--sunset-pink)] via-[var(--sunset-orange)] to-[var(--sunset-purple)]">
+                  Dashboard
+                </span>
               </h1>
               <p className="text-xs sm:text-sm text-text-muted">
                 Statistieken van {seasons.length} seizoenen zaalvoetbal
@@ -92,10 +105,25 @@ export default function Home() {
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6 w-full">
         {selectedPlayer && (
-          <Card>
-            <PlayerDetail player={selectedPlayer} seasons={seasons} onClose={() => setSelectedPlayer(null)} />
+          <Card
+            icon={<Users className="h-4 w-4" />}
+            title={selectedPlayer}
+            action={
+              <button
+                onClick={() => setSelectedPlayer(null)}
+                className="text-xs font-medium text-text-muted hover:text-text-primary rounded-full px-3 py-1.5 hover:bg-white/40 dark:hover:bg-white/10"
+              >
+                Sluiten
+              </button>
+            }
+          >
+            <PlayerDetail player={selectedPlayer} seasons={seasons} />
           </Card>
         )}
+
+        <Card icon={<Activity className="h-4 w-4" />} title="Wedstrijdvorm" description="Doelsaldo per wedstrijd, chronologisch">
+          <HeroFormChart matches={filteredMatches} />
+        </Card>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           <StatTile label="Wedstrijden" value={standings.played} />
@@ -112,28 +140,52 @@ export default function Home() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
-          <Card title="Topscorers" description="Meeste doelpunten (alle wedstrijdtypes, klik voor details)">
-            <BarList items={topscorers} color="var(--series-1)" onSelect={setSelectedPlayer} selectedKey={selectedPlayer} />
+          <Card
+            icon={<Trophy className="h-4 w-4" />}
+            title="Topscorers"
+            description="Meeste doelpunten (alle wedstrijdtypes, klik voor details)"
+          >
+            <BarList
+              items={topscorers}
+              gradientFrom="var(--sunset-pink)"
+              gradientTo="var(--sunset-orange)"
+              onSelect={setSelectedPlayer}
+              selectedKey={selectedPlayer}
+            />
           </Card>
-          <Card title="Aanwezigheid" description="Meest aanwezige spelers (alle wedstrijdtypes)">
-            <BarList items={attendanceLeaders} color="var(--series-3)" onSelect={setSelectedPlayer} selectedKey={selectedPlayer} />
+          <Card
+            icon={<Users className="h-4 w-4" />}
+            title="Aanwezigheid"
+            description="Meest aanwezige spelers (alle wedstrijdtypes)"
+          >
+            <BarList
+              items={attendanceLeaders}
+              gradientFrom="var(--sunset-purple)"
+              gradientTo="var(--sunset-mint)"
+              onSelect={setSelectedPlayer}
+              selectedKey={selectedPlayer}
+            />
           </Card>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
-          <Card title="Resultaten per seizoen" description="Winst / gelijk / verlies">
+          <Card icon={<TrendingUp className="h-4 w-4" />} title="Resultaten per seizoen" description="Winst / gelijk / verlies">
             <ResultTrendChart data={seasonTrend} />
           </Card>
-          <Card title="Doelpunten per seizoen" description="Voor vs. tegen">
+          <Card icon={<Goal className="h-4 w-4" />} title="Doelpunten per seizoen" description="Voor vs. tegen">
             <GoalsTrendChart data={seasonTrend} />
           </Card>
         </div>
 
-        <Card title="Tegenstanders" description="Head-to-head record per tegenstander (huidige selectie)">
+        <Card icon={<Swords className="h-4 w-4" />} title="Tegenstanders" description="Head-to-head record per tegenstander (huidige selectie)">
           <HeadToHeadTable data={headToHead} />
         </Card>
 
-        <Card title="Wedstrijden" description={`${filteredMatches.length} wedstrijden in huidige selectie`}>
+        <Card
+          icon={<ListChecks className="h-4 w-4" />}
+          title="Wedstrijden"
+          description={`${filteredMatches.length} wedstrijden in huidige selectie`}
+        >
           <MatchTable matches={filteredMatches} />
         </Card>
       </main>

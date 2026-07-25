@@ -2,15 +2,15 @@
 
 :root {
   color-scheme: light;
-  --page: #f9f9f7;
-  --surface: #fcfcfb;
+  --page: #fdf7f2;
+  --surface: #fdf7f2;
   --surface-raised: #ffffff;
-  --text-primary: #0b0b0b;
-  --text-secondary: #52514e;
-  --text-muted: #898781;
-  --gridline: #e1e0d9;
-  --baseline: #c3c2b7;
-  --border: rgba(11, 11, 11, 0.1);
+  --text-primary: #1c1310;
+  --text-secondary: #5c4c46;
+  --text-muted: #93827b;
+  --gridline: #ecdfd6;
+  --baseline: #d9c7bc;
+  --border: rgba(28, 19, 16, 0.08);
 
   --series-1: #2a78d6; /* blue */
   --series-2: #eb6834; /* orange */
@@ -28,19 +28,33 @@
   --status-good-bg: #e3f6e3;
   --status-warning-bg: #fff4dc;
   --status-critical-bg: #fbe6e6;
+
+  /* Decorative sunset accents — background blobs & gradient fills only, never used to
+     encode distinct categorical data (see src/data/dataviz notes in README). */
+  --sunset-pink: #ff8fb3;
+  --sunset-orange: #ffb178;
+  --sunset-purple: #b78aff;
+  --sunset-mint: #6fe0c0;
+
+  /* Glassmorphism chrome */
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-strong: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.65);
+  --glass-shadow: 0 8px 32px rgba(139, 58, 98, 0.14), 0 1px 1px rgba(139, 58, 98, 0.08);
+  --glass-blur: 20px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --page: #0d0d0d;
-    --surface: #1a1a19;
-    --surface-raised: #201f1e;
-    --text-primary: #ffffff;
-    --text-secondary: #c3c2b7;
-    --text-muted: #898781;
-    --gridline: #2c2c2a;
-    --baseline: #383835;
+    --page: #150f18;
+    --surface: #150f18;
+    --surface-raised: #1e1620;
+    --text-primary: #fdf6f2;
+    --text-secondary: #cdbfc4;
+    --text-muted: #8f818a;
+    --gridline: #2e2530;
+    --baseline: #40333e;
     --border: rgba(255, 255, 255, 0.1);
 
     --series-1: #3987e5;
@@ -59,19 +73,30 @@
     --status-good-bg: #123312;
     --status-warning-bg: #332a10;
     --status-critical-bg: #331616;
+
+    --sunset-pink: #ff6fa0;
+    --sunset-orange: #ff9450;
+    --sunset-purple: #9a6bff;
+    --sunset-mint: #3fd6ac;
+
+    --glass-bg: rgba(35, 26, 38, 0.55);
+    --glass-bg-strong: rgba(35, 26, 38, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 1px 1px rgba(0, 0, 0, 0.3);
+    --glass-blur: 20px;
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --page: #0d0d0d;
-  --surface: #1a1a19;
-  --surface-raised: #201f1e;
-  --text-primary: #ffffff;
-  --text-secondary: #c3c2b7;
-  --text-muted: #898781;
-  --gridline: #2c2c2a;
-  --baseline: #383835;
+  --page: #150f18;
+  --surface: #150f18;
+  --surface-raised: #1e1620;
+  --text-primary: #fdf6f2;
+  --text-secondary: #cdbfc4;
+  --text-muted: #8f818a;
+  --gridline: #2e2530;
+  --baseline: #40333e;
   --border: rgba(255, 255, 255, 0.1);
 
   --series-1: #3987e5;
@@ -90,6 +115,17 @@
   --status-good-bg: #123312;
   --status-warning-bg: #332a10;
   --status-critical-bg: #331616;
+
+  --sunset-pink: #ff6fa0;
+  --sunset-orange: #ff9450;
+  --sunset-purple: #9a6bff;
+  --sunset-mint: #3fd6ac;
+
+  --glass-bg: rgba(35, 26, 38, 0.55);
+  --glass-bg-strong: rgba(35, 26, 38, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 1px 1px rgba(0, 0, 0, 0.3);
+  --glass-blur: 20px;
 }
 
 @theme inline {
@@ -113,14 +149,57 @@
   --color-status-good: var(--status-good);
   --color-status-warning: var(--status-warning);
   --color-status-critical: var(--status-critical);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-jakarta);
+  --font-display: var(--font-outfit);
+}
+
+html {
+  min-height: 100%;
 }
 
 body {
+  position: relative;
+  min-height: 100vh;
   background: var(--page);
   color: var(--text-primary);
   font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* Fixed sunset gradient mesh behind everything — the "glass" only reads as glass
+   because of this vivid, blurred backdrop. Pure CSS, no extra DOM nodes. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(38rem 32rem at 8% 6%, color-mix(in srgb, var(--sunset-pink) 65%, transparent), transparent 65%),
+    radial-gradient(34rem 30rem at 95% 12%, color-mix(in srgb, var(--sunset-orange) 60%, transparent), transparent 65%),
+    radial-gradient(36rem 34rem at 85% 90%, color-mix(in srgb, var(--sunset-purple) 55%, transparent), transparent 65%),
+    radial-gradient(30rem 28rem at 10% 92%, color-mix(in srgb, var(--sunset-mint) 45%, transparent), transparent 65%),
+    radial-gradient(50rem 40rem at 50% 45%, color-mix(in srgb, var(--sunset-orange) 20%, transparent), transparent 70%);
+  filter: blur(60px) saturate(115%);
+}
+
+.glass {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-strong {
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.font-display {
+  font-family: var(--font-display), system-ui, sans-serif;
 }
 
 * {

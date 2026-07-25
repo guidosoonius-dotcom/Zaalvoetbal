@@ -12,13 +12,15 @@ export interface BarListItem {
 
 export function BarList({
   items,
-  color = "var(--series-1)",
+  gradientFrom = "var(--sunset-pink)",
+  gradientTo = "var(--sunset-orange)",
   onSelect,
   selectedKey,
   unit,
 }: {
   items: BarListItem[];
-  color?: string;
+  gradientFrom?: string;
+  gradientTo?: string;
   onSelect?: (key: string) => void;
   selectedKey?: string | null;
   unit?: string;
@@ -40,9 +42,9 @@ export function BarList({
               type="button"
               onClick={() => onSelect?.(item.key)}
               className={cn(
-                "w-full text-left group rounded-lg px-1 py-1 transition-colors",
-                onSelect && "cursor-pointer hover:bg-black/[0.03] dark:hover:bg-white/[0.05]",
-                isSelected && "bg-black/[0.04] dark:bg-white/[0.08]",
+                "w-full text-left group rounded-2xl px-2 py-1.5 transition-colors",
+                onSelect && "cursor-pointer hover:bg-white/40 dark:hover:bg-white/10",
+                isSelected && "bg-white/50 dark:bg-white/15",
               )}
             >
               <div className="flex items-baseline justify-between gap-2 mb-1">
@@ -50,15 +52,18 @@ export function BarList({
                   <span className="text-text-muted tabular-nums text-xs w-4 shrink-0">{idx + 1}</span>
                   {item.label}
                 </span>
-                <span className="text-sm font-semibold tabular-nums text-text-primary shrink-0">
+                <span className="font-display text-sm font-semibold tabular-nums text-text-primary shrink-0">
                   {item.valueLabel ?? item.value}
                   {unit && <span className="text-text-muted font-normal">{unit}</span>}
                 </span>
               </div>
-              <div className="h-2 rounded-full bg-gridline overflow-hidden ml-6">
+              <div className="h-2.5 rounded-full bg-white/40 dark:bg-white/10 overflow-hidden ml-6">
                 <div
                   className="h-full rounded-full"
-                  style={{ width: `${pct}%`, backgroundColor: color }}
+                  style={{
+                    width: `${pct}%`,
+                    backgroundImage: `linear-gradient(90deg, ${gradientFrom}, ${gradientTo})`,
+                  }}
                 />
               </div>
               {item.sublabel && (

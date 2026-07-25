@@ -13,11 +13,11 @@ export function StatTile({
   accent?: "good" | "critical" | "neutral";
 }) {
   return (
-    <div className="rounded-xl border border-border bg-surface-raised p-4 flex flex-col gap-1 min-w-0">
+    <div className="glass rounded-[22px] p-4 flex flex-col gap-1 min-w-0">
       <span className="text-xs font-medium uppercase tracking-wide text-text-muted truncate">{label}</span>
       <span
         className={cn(
-          "text-2xl font-bold tabular-nums",
+          "font-display text-3xl font-bold tabular-nums leading-tight",
           accent === "good" && "text-status-good",
           accent === "critical" && "text-status-critical",
           (!accent || accent === "neutral") && "text-text-primary",

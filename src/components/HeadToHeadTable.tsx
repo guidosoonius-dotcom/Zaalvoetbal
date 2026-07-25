@@ -32,10 +32,10 @@ export function HeadToHeadTable({ data }: { data: HeadToHead[] }) {
             key={o.key}
             onClick={() => setSortKey(o.key)}
             className={cn(
-              "px-2.5 py-1 rounded-md text-xs font-semibold border border-border transition-colors",
+              "px-3 py-1 rounded-full text-xs font-semibold border border-border transition-colors",
               sortKey === o.key
-                ? "bg-[var(--series-1)] text-white border-transparent"
-                : "text-text-secondary hover:text-text-primary bg-surface-raised",
+                ? "bg-gradient-to-r from-[var(--sunset-purple)] to-[var(--sunset-pink)] text-white border-transparent"
+                : "text-text-secondary hover:text-text-primary bg-white/40 dark:bg-white/10",
             )}
           >
             {o.label}
@@ -44,7 +44,7 @@ export function HeadToHeadTable({ data }: { data: HeadToHead[] }) {
       </div>
       <div className="overflow-x-auto -mx-1 max-h-80 overflow-y-auto">
         <table className="w-full text-sm border-collapse min-w-[420px]">
-          <thead className="sticky top-0 bg-surface-raised">
+          <thead className="sticky top-0 backdrop-blur-md bg-[var(--glass-bg-strong)]">
             <tr className="text-left text-xs uppercase tracking-wide text-text-muted border-b border-gridline">
               <th className="py-2 px-1 font-medium">Tegenstander</th>
               <th className="py-2 px-1 font-medium text-right">Gesp.</th>

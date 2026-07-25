@@ -9,7 +9,7 @@ const tickStyle = { fill: "var(--text-muted)", fontSize: 12 };
 function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: { name: string; value: number; color: string }[]; label?: string }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg border border-border bg-surface-raised px-3 py-2 shadow-md text-xs">
+    <div className="glass-strong rounded-2xl px-3 py-2 text-xs">
       <div className="font-semibold text-text-primary mb-1">{label}</div>
       {payload.map((p) => (
         <div key={p.name} className="flex items-center gap-1.5 text-text-secondary">
@@ -21,7 +21,7 @@ function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: 
   );
 }
 
-export function PlayerDetail({ player, seasons, onClose }: { player: string; seasons: Season[]; onClose: () => void }) {
+export function PlayerDetail({ player, seasons }: { player: string; seasons: Season[] }) {
   const perSeason = seasons
     .map((s) => {
       const stat = s.playerStats.find((p) => p.player === player);
@@ -42,16 +42,6 @@ export function PlayerDetail({ player, seasons, onClose }: { player: string; sea
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-start justify-between gap-3">
-        <h3 className="text-base font-bold text-text-primary">{player}</h3>
-        <button
-          onClick={onClose}
-          className="text-xs font-medium text-text-muted hover:text-text-primary rounded-md px-2 py-1 hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
-        >
-          Sluiten
-        </button>
-      </div>
-
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <StatTile label="Totaal doelpunten" value={totalGoals} />
         <StatTile label="Doelp. per wedstrijd" value={goalsPerMatch.toFixed(2)} />

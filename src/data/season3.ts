@@ -1,4 +1,4 @@
-import { buildMatches, MatchTuple, PlayerSeasonStat, Season } from "./types";
+import { buildMatches, LineupsByRow, MatchTuple, PlayerSeasonStat, Season } from "./types";
 
 const tuples: MatchTuple[] = [
   ["19 aug", "Maandag", "ZVV Den Haag 32", "Thuis", "20:30", "Sporthoeve, Bodegraven", 8, 3, "Oefenwedstrijd team Rob"],
@@ -41,9 +41,57 @@ const playerStats: PlayerSeasonStat[] = [
   { player: "Steven", aanwezig: 24, afwezig: 1, goals: 10 },
 ];
 
+/**
+ * Per-match lineup, transcribed from the source sheet's player grid (green
+ * cell = played, optionally with a goal count; red cell = absent). Row 23
+ * (the walkover, "Tegenstander niet op komen dagen") has no lineup — the
+ * sheet itself left every player cell blank for that match. Every player's
+ * played/absent/goals tally here was cross-checked against both the sheet's
+ * own per-row goal sum ("Som" column) and its season-end per-player totals
+ * (the `playerStats` above) and matches exactly.
+ */
+const ABSENT_ROWS: Record<string, number[]> = {
+  Alex: [6],
+  Ernst: [8],
+  Guido: [2, 3, 10, 13, 14, 16, 17, 20],
+  Jasper: [1, 5, 11, 15, 19, 20, 21, 22, 24, 25],
+  Jonathan: [10, 14, 15, 16],
+  Marius: [2, 7, 12, 17, 18, 19, 20, 21, 22],
+  Rachid: [4, 15, 19, 20, 26],
+  Sander: [9],
+  Steven: [19],
+};
+
+const GOALS_BY_ROW: Record<string, Record<number, number>> = {
+  Alex: { 2: 1, 3: 1, 8: 1, 10: 2, 11: 1, 16: 2, 17: 2, 18: 2, 20: 1 },
+  Ernst: { 7: 1, 14: 1, 18: 1, 24: 1, 25: 1, 26: 1 },
+  Guido: { 1: 3, 7: 1, 8: 1, 11: 1, 12: 3, 18: 2, 19: 3, 21: 2 },
+  Jasper: { 3: 1, 7: 1, 9: 1, 14: 1, 18: 2 },
+  Jonathan: { 1: 2, 2: 2, 3: 1, 6: 1, 7: 1, 8: 1, 9: 2, 11: 1, 12: 2, 17: 2, 18: 1, 19: 1, 20: 2, 21: 2, 22: 1, 24: 1, 26: 1 },
+  Marius: { 4: 1, 5: 1, 8: 1, 14: 3, 15: 1, 24: 1 },
+  Rachid: { 1: 2, 2: 3, 5: 1, 6: 2, 7: 2, 8: 2, 9: 2, 12: 1, 13: 1, 16: 1, 17: 3, 18: 1, 21: 1 },
+  Sander: { 1: 1, 2: 3, 3: 1, 6: 2, 7: 3, 8: 4, 13: 1, 15: 1, 17: 1, 18: 1, 19: 1, 20: 1, 21: 1, 25: 1, 26: 1 },
+  Steven: { 2: 1, 6: 1, 7: 1, 8: 1, 12: 1, 14: 1, 15: 2, 18: 1, 25: 1 },
+};
+
+const WALKOVER_ROW = 23;
+
+function buildLineups(): LineupsByRow {
+  const result: LineupsByRow = {};
+  for (let row = 1; row <= tuples.length; row++) {
+    if (row === WALKOVER_ROW) continue;
+    result[row] = playerStats.map(({ player }) => {
+      const played = !(ABSENT_ROWS[player] ?? []).includes(row);
+      const goals = played ? (GOALS_BY_ROW[player]?.[row] ?? 0) : 0;
+      return { player, played, goals };
+    });
+  }
+  return result;
+}
+
 export const season3: Season = {
   id: "seizoen-2024-2025",
   label: "2024-2025",
-  matches: buildMatches("s3", tuples),
+  matches: buildMatches("s3", tuples, buildLineups()),
   playerStats,
 };

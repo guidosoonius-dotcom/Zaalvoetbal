@@ -188,7 +188,7 @@ function Dashboard() {
               </button>
             }
           >
-            <PlayerDetail player={selectedPlayer} seasons={seasons} />
+            <PlayerDetail player={selectedPlayer} seasons={seasons} allMatches={allMatches} />
           </Card>
         )}
 

@@ -2,6 +2,12 @@ export type MatchType = "competitie" | "beker" | "oefenwedstrijd";
 export type MatchResult = "W" | "D" | "L";
 export type HomeAway = "Thuis" | "Uit";
 
+export interface LineupEntry {
+  player: string;
+  played: boolean;
+  goals: number;
+}
+
 export interface Match {
   id: string;
   date: string;
@@ -15,6 +21,13 @@ export interface Match {
   result: MatchResult;
   type: MatchType;
   note?: string;
+  /**
+   * Per-match player lineup (who played, who was absent, individual goals),
+   * transcribed from the source sheet's player grid. Only populated for
+   * seasons where this per-match detail was transcribed (currently only
+   * 2024-2025) — undefined for the rest, which only have season-end totals.
+   */
+  lineup?: LineupEntry[];
 }
 
 export interface PlayerSeasonStat {
@@ -54,7 +67,10 @@ function detectType(note?: string): MatchType {
   return "competitie";
 }
 
-export function buildMatches(seasonId: string, tuples: MatchTuple[]): Match[] {
+/** Per-match lineups keyed by 1-based row index (matching tuple order). */
+export type LineupsByRow = Record<number, LineupEntry[]>;
+
+export function buildMatches(seasonId: string, tuples: MatchTuple[], lineups?: LineupsByRow): Match[] {
   return tuples.map((t, i) => {
     const [date, day, opponent, homeAway, time, venue, scoreFor, scoreAgainst, note] = t;
     const result: MatchResult =
@@ -72,6 +88,7 @@ export function buildMatches(seasonId: string, tuples: MatchTuple[]): Match[] {
       result,
       type: detectType(note),
       note,
+      lineup: lineups?.[i + 1],
     };
   });
 }

@@ -250,3 +250,26 @@ export function computeMatchTypeBreakdown(matches: MatchWithSeason[]): MatchType
   const types: MatchType[] = ["competitie", "beker", "oefenwedstrijd"];
   return types.map((type) => ({ type, standings: computeStandings(matches.filter((m) => m.type === type)) }));
 }
+
+export interface PlayerImpact {
+  withPlayer: Standings;
+  withoutPlayer: Standings;
+}
+
+/**
+ * Compares team results in matches the player played vs. matches they missed,
+ * using only matches with a transcribed per-match lineup (currently just
+ * 2024-2025) — matches without lineup data are silently excluded, so this is
+ * never diluted by seasons where we only have season-end totals. Returns
+ * null if the player has no lineup data at all in the given matches.
+ */
+export function computePlayerImpact(matches: MatchWithSeason[], player: string): PlayerImpact | null {
+  const withLineup = matches.filter((m) => m.lineup?.some((l) => l.player === player));
+  if (withLineup.length === 0) return null;
+  const withPlayer = withLineup.filter((m) => m.lineup!.find((l) => l.player === player)!.played);
+  const withoutPlayer = withLineup.filter((m) => !m.lineup!.find((l) => l.player === player)!.played);
+  return {
+    withPlayer: computeStandings(withPlayer),
+    withoutPlayer: computeStandings(withoutPlayer),
+  };
+}

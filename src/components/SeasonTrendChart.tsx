@@ -11,6 +11,7 @@ import {
   YAxis,
 } from "recharts";
 import { SeasonTrendPoint } from "@/lib/stats";
+import { shortenSeasonLabel } from "@/lib/utils";
 
 const tickStyle = { fill: "var(--text-muted)", fontSize: 12 };
 
@@ -40,7 +41,14 @@ export function ResultTrendChart({ data }: { data: SeasonTrendPoint[] }) {
     <ResponsiveContainer width="100%" height={220}>
       <BarChart data={chartData} barCategoryGap="24%">
         <CartesianGrid stroke="var(--gridline)" vertical={false} />
-        <XAxis dataKey="season" tick={tickStyle} axisLine={{ stroke: "var(--baseline)" }} tickLine={false} />
+        <XAxis
+          dataKey="season"
+          tick={tickStyle}
+          axisLine={{ stroke: "var(--baseline)" }}
+          tickLine={false}
+          interval={0}
+          tickFormatter={shortenSeasonLabel}
+        />
         <YAxis tick={tickStyle} axisLine={false} tickLine={false} allowDecimals={false} />
         <Tooltip content={<ChartTooltip />} cursor={{ fill: "var(--gridline)", opacity: 0.4 }} />
         <Legend wrapperStyle={{ fontSize: 12, color: "var(--text-secondary)" }} />
@@ -62,7 +70,14 @@ export function GoalsTrendChart({ data }: { data: SeasonTrendPoint[] }) {
     <ResponsiveContainer width="100%" height={220}>
       <BarChart data={chartData} barCategoryGap="24%" barGap={4}>
         <CartesianGrid stroke="var(--gridline)" vertical={false} />
-        <XAxis dataKey="season" tick={tickStyle} axisLine={{ stroke: "var(--baseline)" }} tickLine={false} />
+        <XAxis
+          dataKey="season"
+          tick={tickStyle}
+          axisLine={{ stroke: "var(--baseline)" }}
+          tickLine={false}
+          interval={0}
+          tickFormatter={shortenSeasonLabel}
+        />
         <YAxis tick={tickStyle} axisLine={false} tickLine={false} allowDecimals={false} />
         <Tooltip content={<ChartTooltip />} cursor={{ fill: "var(--gridline)", opacity: 0.4 }} />
         <Legend wrapperStyle={{ fontSize: 12, color: "var(--text-secondary)" }} />

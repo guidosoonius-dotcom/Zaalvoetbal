@@ -2,6 +2,7 @@
 
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Season } from "@/data";
+import { shortenSeasonLabel } from "@/lib/utils";
 import { StatTile } from "./StatTile";
 
 const tickStyle = { fill: "var(--text-muted)", fontSize: 12 };
@@ -54,7 +55,14 @@ export function PlayerDetail({ player, seasons }: { player: string; seasons: Sea
         <ResponsiveContainer width="100%" height={180}>
           <BarChart data={perSeason} barCategoryGap="30%">
             <CartesianGrid stroke="var(--gridline)" vertical={false} />
-            <XAxis dataKey="season" tick={tickStyle} axisLine={{ stroke: "var(--baseline)" }} tickLine={false} />
+            <XAxis
+              dataKey="season"
+              tick={tickStyle}
+              axisLine={{ stroke: "var(--baseline)" }}
+              tickLine={false}
+              interval={0}
+              tickFormatter={shortenSeasonLabel}
+            />
             <YAxis tick={tickStyle} axisLine={false} tickLine={false} allowDecimals={false} />
             <Tooltip content={<ChartTooltip />} cursor={{ fill: "var(--gridline)", opacity: 0.4 }} />
             <Bar dataKey="Goals" name="Doelpunten" fill="var(--series-1)" radius={[4, 4, 0, 0]} />

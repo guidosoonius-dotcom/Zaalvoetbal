@@ -7,7 +7,7 @@ const tuples: MatchTuple[] = [
   ["28 sep", "Woensdag", "ASW 9", "Uit", "21:00", "", 3, 3],
   ["5 okt", "Woensdag", "SVO Buytenpark 2", "Thuis", "21:00", "", 2, 2],
   ["12 okt", "Woensdag", "FC Noord/Dubbele Schaar 2", "Thuis", "20:00", "", 2, 10],
-  ["2 nov", "Woensdag", "ASW 13", "Uit", "22:00", "", 2, 24],
+  ["2 nov", "Woensdag", "ASW 13", "Uit", "22:00", "", 24, 2],
   ["9 nov", "Woensdag", "Watergras 10", "Thuis", "21:00", "", 3, 3],
   ["18 nov", "Vrijdag", "Mazzel Stars 5", "Uit", "20:00", "", 5, 1],
   ["23 nov", "Woensdag", "VNI 2", "Thuis", "22:00", "", 4, 6],

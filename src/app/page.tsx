@@ -121,7 +121,7 @@ export default function Home() {
           </Card>
         )}
 
-        <Card icon={<Activity className="h-4 w-4" />} title="Wedstrijdvorm" description="Doelsaldo per wedstrijd, chronologisch">
+        <Card icon={<Activity className="h-4 w-4" />} title="Vorm" description="Cumulatieve punten (winst=3, gelijk=1) door de tijd">
           <HeroFormChart matches={filteredMatches} />
         </Card>
 

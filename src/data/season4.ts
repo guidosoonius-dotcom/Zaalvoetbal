@@ -1,0 +1,58 @@
+import { buildMatches, MatchTuple, PlayerSeasonStat, Season } from "./types";
+
+const tuples: MatchTuple[] = [
+  ["30 aug", "Woensdag", "Team Aljosha", "Thuis", "21:00", "Sporthoeve, Bodegraven", 2, 2, "Oefenwedstrijd"],
+  ["8 sep", "Vrijdag", "Kortenhoef '94 1", "Uit", "21:00", "Sportcentrum West, Rotterdam", 5, 5, "Beker 1e ronde, 2-3 winst pen. (Alex, Steven, Guido)"],
+  ["20 sep", "Maandag", "Woubrugge 2", "Thuis", "21:00", "Sporthoeve, Bodegraven", 3, 2],
+  ["25 sep", "Woensdag", "Watergras 10", "Uit", "20:00", "Mammoet, Gouda", 5, 1],
+  ["4 okt", "Woensdag", "ASW 11", "Thuis", "21:00", "Sporthoeve, Bodegraven", 10, 4, "Scheids: Guido, Sander"],
+  ["9 okt", "Woensdag", "ASW 10", "Uit", "21:00", "Dreef, Waddinxveen", 3, 8],
+  ["23 okt", "Maandag", "ADIO 1", "Uit", "20:00", "Veur, Zoetermeer", 5, 7, "Beker 2e ronde"],
+  ["27 okt", "Vrijdag", "RVC '33 2", "Uit", "19:00", "Mammoet, Gouda", 1, 3],
+  ["1 nov", "Woensdag", "ASW 9", "Thuis", "21:00", "Sporthoeve, Bodegraven", 4, 0],
+  ["10 nov", "Vrijdag", "Watergras 11", "Thuis", "20:00", "Meerkoet, Reeuwijk", 2, 3, "Scheids: Jasper"],
+  ["13 nov", "Maandag", "Watergras 12", "Uit", "21:00", "Mammoet, Gouda", 9, 3],
+  ["22 nov", "Woensdag", "WIA 25", "Uit", "20:00", "Sportcentrum West, Rotterdam", 5, 3, "Beker, 3e ronde"],
+  ["29 nov", "Woensdag", "Woubrugge 3", "Thuis", "20:00", "Sporthoeve, Bodegraven", 8, 3, "Scheids: Alex"],
+  ["13 dec", "Woensdag", "Donk 1", "Thuis", "22:00", "Limeshal, Alphen a/d Rijn", 16, 0],
+  ["12 jan", "Vrijdag", "Donk 1", "Uit", "19:00", "Mammoet, Gouda", 4, 0],
+  ["17 jan", "Woensdag", "ASW 12", "Uit", "22:00", "Dreef, Waddinxveen", 2, 2],
+  ["24 jan", "Woensdag", "ARC 3", "Thuis", "21:00", "Limeshal, Alphen a/d Rijn", 3, 4],
+  ["31 jan", "Woensdag", "RVC '33 2", "Thuis", "22:00", "Sporthoeve, Bodegraven", 7, 1],
+  ["16 feb", "Woensdag", "Groenoord ZVV 3", "Uit", "20:00", "Mammoet, Gouda", 7, 6],
+  ["28 feb", "Woensdag", "Watergras 10", "Thuis", "21:00", "Sporthoeve, Bodegraven", 4, 4],
+  ["6 mrt", "Woensdag", "ASW 11", "Uit", "21:00", "Dreef, Waddinxveen", 1, 10],
+  ["13 mrt", "Woensdag", "ASW 10", "Thuis", "21:00", "Sporthoeve, Bodegraven", 6, 2],
+  ["20 mrt", "Woensdag", "ASW 9", "Uit", "21:00", "Dreef, Waddinxveen", 8, 1],
+  ["25 mrt", "Woensdag", "Watergras 11", "Uit", "21:00", "Mammoet, Gouda", 8, 2],
+  ["3 apr", "Woensdag", "Woubrugge 2", "Uit", "20:00", "Oudendijk, Woubrugge", 7, 5],
+  ["10 apr", "Woensdag", "Watergras 12", "Thuis", "20:00", "Sporthoeve, Bodegraven", 4, 0],
+  ["17 apr", "Woensdag", "Woubrugge 3", "Uit", "20:00", "Oudendijk, Woubrugge", 4, 8],
+  ["1 mei", "Woensdag", "ASW 12", "Thuis", "20:00", "Sporthoeve, Bodegraven", 6, 5],
+  ["15 mei", "Woensdag", "ARC 3", "Uit", "21:00", "Limeshal, Alphen a/d Rijn", 11, 5],
+  ["22 mei", "Woensdag", "Groenoord ZVV 3", "Thuis", "20:00", "Sporthoeve, Bodegraven", 1, 1],
+];
+
+const playerStats: PlayerSeasonStat[] = [
+  { player: "Alex", aanwezig: 19, afwezig: 11, goals: 11 },
+  { player: "Ernst", aanwezig: 30, afwezig: 0, goals: 10 },
+  { player: "Guido", aanwezig: 20, afwezig: 10, goals: 13 },
+  { player: "Jasper", aanwezig: 16, afwezig: 14, goals: 5 },
+  { player: "Jonathan", aanwezig: 29, afwezig: 1, goals: 34 },
+  { player: "Marinus", aanwezig: 13, afwezig: 17, goals: 2 },
+  { player: "Marius", aanwezig: 20, afwezig: 10, goals: 18 },
+  { player: "Rachid", aanwezig: 26, afwezig: 4, goals: 32 },
+  { player: "Sander", aanwezig: 26, afwezig: 4, goals: 17 },
+  { player: "Stephan", aanwezig: 13, afwezig: 17, goals: 2 },
+  { player: "Steven", aanwezig: 27, afwezig: 3, goals: 14 },
+  { player: "Marijn", aanwezig: 2, afwezig: 28, goals: 2 },
+  { player: "Reinout", aanwezig: 1, afwezig: 29, goals: 1 },
+  { player: "Aksel", aanwezig: 1, afwezig: 29, goals: 0 },
+];
+
+export const season4: Season = {
+  id: "seizoen-4",
+  label: "Seizoen 4",
+  matches: buildMatches("s4", tuples),
+  playerStats,
+};

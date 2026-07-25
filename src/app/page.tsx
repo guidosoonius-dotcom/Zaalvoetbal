@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Trophy, Users, TrendingUp, Goal, Swords, ListChecks, Activity, House, Flame, LineChart, SplitSquareHorizontal } from "lucide-react";
+import { Suspense, useCallback, useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Trophy, Users, TrendingUp, Goal, Swords, ListChecks, Activity, House, Flame, LineChart, SplitSquareHorizontal, GitCompare } from "lucide-react";
 import { getAllMatches, getSeasons, MatchType } from "@/data";
 import {
   computeAttendanceTrend,
@@ -28,14 +29,66 @@ import { HomeAwaySplit } from "@/components/HomeAwaySplit";
 import { RecordStatsCard } from "@/components/RecordStatsCard";
 import { AttendanceTrendChart } from "@/components/AttendanceTrendChart";
 import { MatchTypeBreakdown } from "@/components/MatchTypeBreakdown";
+import { SeasonComparison } from "@/components/SeasonComparison";
 
 const seasons = getSeasons();
 const allMatches = getAllMatches();
+const DEFAULT_SEASON_ID = seasons[seasons.length - 1].id;
+const MATCH_TYPES: MatchType[] = ["competitie", "beker", "oefenwedstrijd"];
+
+function parseSeasonId(value: string | null): string | "all" {
+  if (value === "all") return "all";
+  if (value && seasons.some((s) => s.id === value)) return value;
+  return DEFAULT_SEASON_ID;
+}
+
+function parseMatchType(value: string | null): MatchType | "all" {
+  return value && MATCH_TYPES.includes(value as MatchType) ? (value as MatchType) : "all";
+}
 
 export default function Home() {
-  const [seasonId, setSeasonId] = useState<string | "all">(seasons[seasons.length - 1].id);
-  const [matchType, setMatchType] = useState<MatchType | "all">("all");
+  return (
+    <Suspense fallback={null}>
+      <Dashboard />
+    </Suspense>
+  );
+}
+
+function Dashboard() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [seasonId, setSeasonIdState] = useState<string | "all">(() => parseSeasonId(searchParams.get("season")));
+  const [matchType, setMatchTypeState] = useState<MatchType | "all">(() => parseMatchType(searchParams.get("type")));
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
+
+  const updateUrl = useCallback(
+    (nextSeasonId: string | "all", nextMatchType: MatchType | "all") => {
+      const params = new URLSearchParams();
+      if (nextSeasonId !== "all") params.set("season", nextSeasonId);
+      if (nextMatchType !== "all") params.set("type", nextMatchType);
+      const qs = params.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    },
+    [router, pathname],
+  );
+
+  const setSeasonId = useCallback(
+    (id: string | "all") => {
+      setSeasonIdState(id);
+      updateUrl(id, matchType);
+    },
+    [matchType, updateUrl],
+  );
+
+  const setMatchType = useCallback(
+    (type: MatchType | "all") => {
+      setMatchTypeState(type);
+      updateUrl(seasonId, type);
+    },
+    [seasonId, updateUrl],
+  );
 
   const filteredMatches = useMemo(
     () => filterMatches(allMatches, { seasonId, matchType }),
@@ -210,6 +263,10 @@ export default function Home() {
 
         <Card icon={<LineChart className="h-4 w-4" />} title="Aanwezigheidstrend" description="Gemiddeld aanwezigheidspercentage van de hele selectie, per seizoen">
           <AttendanceTrendChart data={attendanceTrend} />
+        </Card>
+
+        <Card icon={<GitCompare className="h-4 w-4" />} title="Seizoenen vergelijken" description="Kies twee seizoenen om naast elkaar te zetten">
+          <SeasonComparison seasons={seasons} allMatches={allMatches} />
         </Card>
 
         <Card icon={<Swords className="h-4 w-4" />} title="Tegenstanders" description="Head-to-head record per tegenstander (huidige selectie)">

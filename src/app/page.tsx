@@ -1,11 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Trophy, Users, TrendingUp, Goal, Swords, ListChecks, Activity } from "lucide-react";
+import { Trophy, Users, TrendingUp, Goal, Swords, ListChecks, Activity, House, Flame, LineChart, SplitSquareHorizontal } from "lucide-react";
 import { getAllMatches, getSeasons, MatchType } from "@/data";
 import {
+  computeAttendanceTrend,
+  computeClubHeadToHead,
   computeHeadToHead,
+  computeHomeAwayStandings,
+  computeMatchTypeBreakdown,
   computePlayerStats,
+  computeRecordStats,
   computeSeasonTrend,
   computeStandings,
   filterMatches,
@@ -19,6 +24,10 @@ import { HeroFormChart } from "@/components/HeroFormChart";
 import { HeadToHeadTable } from "@/components/HeadToHeadTable";
 import { MatchTable } from "@/components/MatchTable";
 import { PlayerDetail } from "@/components/PlayerDetail";
+import { HomeAwaySplit } from "@/components/HomeAwaySplit";
+import { RecordStatsCard } from "@/components/RecordStatsCard";
+import { AttendanceTrendChart } from "@/components/AttendanceTrendChart";
+import { MatchTypeBreakdown } from "@/components/MatchTypeBreakdown";
 
 const seasons = getSeasons();
 const allMatches = getAllMatches();
@@ -35,7 +44,16 @@ export default function Home() {
   const standings = useMemo(() => computeStandings(filteredMatches), [filteredMatches]);
   const playerStats = useMemo(() => computePlayerStats(seasons, seasonId), [seasonId]);
   const headToHead = useMemo(() => computeHeadToHead(filteredMatches), [filteredMatches]);
+  const clubHeadToHead = useMemo(() => computeClubHeadToHead(filteredMatches), [filteredMatches]);
   const seasonTrend = useMemo(() => computeSeasonTrend(seasons, matchType), [matchType]);
+  const homeAway = useMemo(() => computeHomeAwayStandings(filteredMatches), [filteredMatches]);
+  const recordStats = useMemo(() => computeRecordStats(filteredMatches), [filteredMatches]);
+  const attendanceTrend = useMemo(() => computeAttendanceTrend(seasons), []);
+  const seasonOnlyMatches = useMemo(
+    () => filterMatches(allMatches, { seasonId, matchType: "all" }),
+    [seasonId],
+  );
+  const matchTypeBreakdown = useMemo(() => computeMatchTypeBreakdown(seasonOnlyMatches), [seasonOnlyMatches]);
 
   const topscorers = useMemo(
     () =>
@@ -140,6 +158,19 @@ export default function Home() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
+          <Card icon={<House className="h-4 w-4" />} title="Thuis vs. uit" description="Presteren we beter thuis of uit?">
+            <HomeAwaySplit data={homeAway} />
+          </Card>
+          <Card icon={<SplitSquareHorizontal className="h-4 w-4" />} title="Per wedstrijdtype" description="Competitie, beker en oefenwedstrijd naast elkaar (huidig seizoen)">
+            <MatchTypeBreakdown data={matchTypeBreakdown} />
+          </Card>
+        </div>
+
+        <Card icon={<Flame className="h-4 w-4" />} title="Records" description="Uitschieters en reeksen (huidige selectie)">
+          <RecordStatsCard stats={recordStats} />
+        </Card>
+
+        <div className="grid lg:grid-cols-2 gap-6">
           <Card
             icon={<Trophy className="h-4 w-4" />}
             title="Topscorers"
@@ -177,8 +208,12 @@ export default function Home() {
           </Card>
         </div>
 
+        <Card icon={<LineChart className="h-4 w-4" />} title="Aanwezigheidstrend" description="Gemiddeld aanwezigheidspercentage van de hele selectie, per seizoen">
+          <AttendanceTrendChart data={attendanceTrend} />
+        </Card>
+
         <Card icon={<Swords className="h-4 w-4" />} title="Tegenstanders" description="Head-to-head record per tegenstander (huidige selectie)">
-          <HeadToHeadTable data={headToHead} />
+          <HeadToHeadTable data={headToHead} clubData={clubHeadToHead} />
         </Card>
 
         <Card

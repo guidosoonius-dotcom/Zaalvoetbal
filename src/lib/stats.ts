@@ -145,3 +145,108 @@ export const MATCH_TYPE_LABELS: Record<MatchType, string> = {
   beker: "Beker",
   oefenwedstrijd: "Oefenwedstrijd",
 };
+
+export interface HomeAwayStandings {
+  home: Standings;
+  away: Standings;
+}
+
+export function computeHomeAwayStandings(matches: MatchWithSeason[]): HomeAwayStandings {
+  return {
+    home: computeStandings(matches.filter((m) => m.homeAway === "Thuis")),
+    away: computeStandings(matches.filter((m) => m.homeAway === "Uit")),
+  };
+}
+
+/**
+ * Strips a trailing team-number suffix (e.g. "ASW 13" -> "ASW", "Watergras H2" -> "Watergras")
+ * so opponents from the same club but a different team number roll up together. Leaves
+ * embedded numbers that aren't the trailing token alone (e.g. "Voorschoten '97 2" -> "Voorschoten '97").
+ */
+export function normalizeClub(opponent: string): string {
+  return opponent.replace(/\s+[A-Za-z]?\d+$/, "").trim();
+}
+
+export function computeClubHeadToHead(matches: MatchWithSeason[]): HeadToHead[] {
+  const remapped = matches.map((m) => ({ ...m, opponent: normalizeClub(m.opponent) }));
+  return computeHeadToHead(remapped);
+}
+
+export interface RecordStats {
+  biggestWin?: MatchWithSeason;
+  biggestLoss?: MatchWithSeason;
+  longestWinStreak: number;
+  longestUnbeatenStreak: number;
+  longestLossStreak: number;
+  cleanSheets: number;
+}
+
+export function computeRecordStats(matches: MatchWithSeason[]): RecordStats {
+  let biggestWin: MatchWithSeason | undefined;
+  let biggestLoss: MatchWithSeason | undefined;
+  let cleanSheets = 0;
+  for (const m of matches) {
+    const diff = m.scoreFor - m.scoreAgainst;
+    if (m.result === "W" && (!biggestWin || diff > biggestWin.scoreFor - biggestWin.scoreAgainst)) {
+      biggestWin = m;
+    }
+    if (m.result === "L" && (!biggestLoss || diff < biggestLoss.scoreFor - biggestLoss.scoreAgainst)) {
+      biggestLoss = m;
+    }
+    if (m.scoreAgainst === 0) cleanSheets += 1;
+  }
+
+  const streaks = matches.reduce(
+    (acc, m) => {
+      const win = m.result === "W" ? acc.win + 1 : 0;
+      const loss = m.result === "L" ? acc.loss + 1 : 0;
+      const unbeaten = m.result !== "L" ? acc.unbeaten + 1 : 0;
+      return {
+        win,
+        loss,
+        unbeaten,
+        maxWin: Math.max(acc.maxWin, win),
+        maxLoss: Math.max(acc.maxLoss, loss),
+        maxUnbeaten: Math.max(acc.maxUnbeaten, unbeaten),
+      };
+    },
+    { win: 0, loss: 0, unbeaten: 0, maxWin: 0, maxLoss: 0, maxUnbeaten: 0 },
+  );
+
+  return {
+    biggestWin,
+    biggestLoss,
+    longestWinStreak: streaks.maxWin,
+    longestLossStreak: streaks.maxLoss,
+    longestUnbeatenStreak: streaks.maxUnbeaten,
+    cleanSheets,
+  };
+}
+
+export interface AttendanceTrendPoint {
+  seasonId: string;
+  seasonLabel: string;
+  attendancePct: number;
+}
+
+export function computeAttendanceTrend(seasons: Season[]): AttendanceTrendPoint[] {
+  return seasons.map((s) => {
+    const aanwezig = s.playerStats.reduce((a, p) => a + p.aanwezig, 0);
+    const afwezig = s.playerStats.reduce((a, p) => a + p.afwezig, 0);
+    return {
+      seasonId: s.id,
+      seasonLabel: s.label,
+      attendancePct: aanwezig + afwezig > 0 ? (aanwezig / (aanwezig + afwezig)) * 100 : 0,
+    };
+  });
+}
+
+export interface MatchTypeBreakdown {
+  type: MatchType;
+  standings: Standings;
+}
+
+export function computeMatchTypeBreakdown(matches: MatchWithSeason[]): MatchTypeBreakdown[] {
+  const types: MatchType[] = ["competitie", "beker", "oefenwedstrijd"];
+  return types.map((type) => ({ type, standings: computeStandings(matches.filter((m) => m.type === type)) }));
+}

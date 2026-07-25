@@ -5,18 +5,22 @@ import { HeadToHead } from "@/lib/stats";
 import { cn } from "@/lib/utils";
 
 type SortKey = "played" | "won" | "goalDiff";
+type GroupMode = "team" | "club";
 
-export function HeadToHeadTable({ data }: { data: HeadToHead[] }) {
+export function HeadToHeadTable({ data, clubData }: { data: HeadToHead[]; clubData: HeadToHead[] }) {
   const [sortKey, setSortKey] = useState<SortKey>("played");
+  const [groupMode, setGroupMode] = useState<GroupMode>("team");
+
+  const activeData = groupMode === "team" ? data : clubData;
 
   const sorted = useMemo(() => {
-    return [...data].sort((a, b) => {
+    return [...activeData].sort((a, b) => {
       if (sortKey === "goalDiff") {
         return b.goalsFor - b.goalsAgainst - (a.goalsFor - a.goalsAgainst);
       }
       return b[sortKey] - a[sortKey];
     });
-  }, [data, sortKey]);
+  }, [activeData, sortKey]);
 
   const sortOptions: { key: SortKey; label: string }[] = [
     { key: "played", label: "Meest gespeeld" },
@@ -24,23 +28,47 @@ export function HeadToHeadTable({ data }: { data: HeadToHead[] }) {
     { key: "goalDiff", label: "Doelsaldo" },
   ];
 
+  const groupOptions: { key: GroupMode; label: string }[] = [
+    { key: "team", label: "Per team" },
+    { key: "club", label: "Per club" },
+  ];
+
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex gap-1.5 flex-wrap">
-        {sortOptions.map((o) => (
-          <button
-            key={o.key}
-            onClick={() => setSortKey(o.key)}
-            className={cn(
-              "px-3 py-1 rounded-full text-xs font-semibold border border-border transition-colors",
-              sortKey === o.key
-                ? "bg-gradient-to-r from-[var(--sunset-purple)] to-[var(--sunset-pink)] text-white border-transparent"
-                : "text-text-secondary hover:text-text-primary bg-white/40 dark:bg-white/10",
-            )}
-          >
-            {o.label}
-          </button>
-        ))}
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <div className="flex gap-1.5 flex-wrap">
+          {sortOptions.map((o) => (
+            <button
+              key={o.key}
+              onClick={() => setSortKey(o.key)}
+              className={cn(
+                "px-3 py-1 rounded-full text-xs font-semibold border border-border transition-colors",
+                sortKey === o.key
+                  ? "bg-gradient-to-r from-[var(--sunset-purple)] to-[var(--sunset-pink)] text-white border-transparent"
+                  : "text-text-secondary hover:text-text-primary bg-white/40 dark:bg-white/10",
+              )}
+            >
+              {o.label}
+            </button>
+          ))}
+        </div>
+        <div className="glass inline-flex rounded-full p-1">
+          {groupOptions.map((o) => (
+            <button
+              key={o.key}
+              type="button"
+              onClick={() => setGroupMode(o.key)}
+              className={cn(
+                "px-3 py-1 rounded-full text-xs font-semibold transition-colors",
+                groupMode === o.key
+                  ? "bg-gradient-to-r from-[var(--sunset-pink)] to-[var(--sunset-orange)] text-white shadow-sm"
+                  : "text-text-secondary hover:text-text-primary",
+              )}
+            >
+              {o.label}
+            </button>
+          ))}
+        </div>
       </div>
       <div className="overflow-x-auto -mx-1 max-h-80 overflow-y-auto">
         <table className="w-full text-sm border-collapse min-w-[420px]">

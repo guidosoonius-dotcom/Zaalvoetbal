@@ -143,7 +143,7 @@ function Dashboard() {
   return (
     <div className="min-h-full flex flex-col relative">
       <div
-        className="absolute inset-x-0 top-0 h-[680px] overflow-hidden pointer-events-none"
+        className="absolute inset-x-0 top-0 h-[560px] overflow-hidden pointer-events-none"
         style={{
           zIndex: 0,
           maskImage: "linear-gradient(to bottom, black, transparent)",
@@ -192,7 +192,7 @@ function Dashboard() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 pt-28 sm:pt-36 pb-6 flex flex-col gap-6 w-full">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-6 flex flex-col gap-6 w-full">
         {selectedPlayer && (
           <Card
             icon={<Users className="h-4 w-4" />}

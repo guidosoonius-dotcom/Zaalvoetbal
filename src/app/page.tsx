@@ -1,7 +1,6 @@
 "use client";
 
 import { Suspense, useCallback, useMemo, useState } from "react";
-import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Trophy, Users, TrendingUp, Goal, Swords, ListChecks, Activity, House, Flame, LineChart, SplitSquareHorizontal, GitCompare } from "lucide-react";
 import { getAllMatches, getSeasons, MatchType } from "@/data";
@@ -141,24 +140,7 @@ function Dashboard() {
   );
 
   return (
-    <div className="min-h-full flex flex-col relative">
-      <div
-        className="absolute inset-x-0 top-0 h-[560px] overflow-hidden pointer-events-none"
-        style={{
-          zIndex: 0,
-          maskImage: "linear-gradient(to bottom, black, transparent)",
-          WebkitMaskImage: "linear-gradient(to bottom, black, transparent)",
-        }}
-      >
-        <Image
-          src="/team.jpg"
-          alt=""
-          fill
-          priority
-          className="object-cover grayscale"
-          style={{ opacity: 0.35, filter: "blur(1px)" }}
-        />
-      </div>
+    <div className="min-h-full flex flex-col">
       <header
         className="sticky top-0 z-10 border-b"
         style={{
@@ -192,7 +174,7 @@ function Dashboard() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-6 flex flex-col gap-6 w-full">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6 w-full">
         {selectedPlayer && (
           <Card
             icon={<Users className="h-4 w-4" />}

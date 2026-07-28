@@ -37,6 +37,7 @@ const playerStats: PlayerSeasonStat[] = [
   { player: "Marius", aanwezig: 20, afwezig: 5, goals: 16 },
   { player: "Rachid", aanwezig: 23, afwezig: 2, goals: 24 },
   { player: "Sander", aanwezig: 23, afwezig: 2, goals: 15 },
+  { player: "Stephan", aanwezig: 0, afwezig: 25, goals: 0 },
   { player: "Steven", aanwezig: 24, afwezig: 1, goals: 8 },
 ];
 

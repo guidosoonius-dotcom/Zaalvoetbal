@@ -43,11 +43,11 @@ const playerStats: PlayerSeasonStat[] = [
   { player: "Marius", aanwezig: 20, afwezig: 10, goals: 18 },
   { player: "Rachid", aanwezig: 26, afwezig: 4, goals: 32 },
   { player: "Sander", aanwezig: 26, afwezig: 4, goals: 17 },
-  { player: "Stephan", aanwezig: 13, afwezig: 17, goals: 2 },
+  { player: "Stephan", aanwezig: 13, afwezig: 17, goals: 5 },
   { player: "Steven", aanwezig: 27, afwezig: 3, goals: 14 },
-  { player: "Marijn", aanwezig: 2, afwezig: 28, goals: 2 },
+  { player: "Marijn", aanwezig: 2, afwezig: 28, goals: 0 },
   { player: "Reinout", aanwezig: 1, afwezig: 29, goals: 1 },
-  { player: "Aksel", aanwezig: 1, afwezig: 29, goals: 0 },
+  { player: "Aksel", aanwezig: 1, afwezig: 29, goals: 3 },
 ];
 
 export const season4: Season = {
